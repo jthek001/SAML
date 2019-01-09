@@ -1,0 +1,101 @@
+
+Metadata requirements
+The SAML XML metadata file provides the RealMe service IdP with the required configuration parameters to enable integration. These include:
+
+EntityID
+Endpoints (Attribute Consumer Service)
+Public X.509 cert
+Organisation info and Contact info. (this requirement will be removed in 2018)
+In most cases, there will be no difference in the SAML metadata values for the RealMe login service and the RealMe assertion service.
+
+The key SAML metadata elements for a RealMe integration are outlined below:
+
+EntityDescriptor
+This is a root element for the metadata. 
+OASIS SAML V2.0 requirement is: MAY be provided (EntitiesDescriptor is an alternative).
+RealMe service requirement is: EntityDescriptor MUST be provided.
+ID
+An optional unique identifier for the element. 
+OASIS SAML V2.0 requirement is: MAY be provided (optional).
+RealMe service requirement is: MAY be provided; MUST NOT contain whitespace.
+Login service and assertion service do not require metadata to be signed.
+entityID
+This is the unique identifier for the Service Provider configured by the metadata.
+OASIS SAML V2.0 requirement is: MUST be provided.
+RealMe login service requirement is: MUST be provided; MUST NOT contain whitespace.
+Recommendation: this should be an exact concatenation of the 'privacy domain' and RealMe 'app ID' and SHOULD be provided in the RealMe standard format.
+KeyDescriptor
+This element provides information about the cryptographic keys used by the Service Provider.
+OASIS SAML V2.0 requirement is: MAY be provided.
+RealMe service requirement is: MUST be provided.
+AssertionConsumerService
+This describes the indexed endpoint for the AuthnRequest.
+OASIS SAML V2.0 requirement is: MUST be provided, if protocol binding and ACS URL is not included in AuthnRequest.
+RealMe service requirement is: SHOULD be provided; MUST include index, binding and location.
+For RealMe ITE environment, multiple indexes and locations can be used for different test environments if supported by the SAML component.
+Additional indexes, bindings and locations not used by RealMe but used by the SP with another IdP can be provided for the SP if required.
+Recommendation: should be provided, unless this is not supported by the organisation's SAML component.
+Binding (in AssertionConsumerService)
+This describes SAML binding required by the Service Provider.
+OASIS SAML V2.0 requirement is: MUST be provided.
+RealMe service requirement is: MUST be provided; valid options are one of POST or Artifact
+Additional bindings (not used or supported by RealMe) may be included if required by the SP.
+urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST;
+urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact
+Recommendation: Use HTTP-POST unless there is a specific requirement to use Artifact.
+Location (in AssertionConsumerService)
+This is a required URI that describes the location of the endpoint.
+OASIS SAML V2.0 requirement is: MUST be provided.
+RealMe service requirement is: MUST be provided.
+Additional locations (not used by RealMe) may be included if required.
+Organization
+This identifies the organisation responsible for the SAML Service Provider.
+OASIS SAML V2.0 requirement is: MAY be provided.
+RealMe service requirement is: MUST be provided. (Note this requirement will be removed in 2018)
+ContactPerson
+This is an optional element describing one or more contact persons.
+OASIS SAML V2.0 requirement is: MAY be provided.
+RealMe login requirement is: SHOULD be provided.
+Recommendation: this is optional, but should be provided. (Note this requiirement will be removed in 2018)
+A sample Service Provider metadata file shows these XML elements in context.
+
+<md:EntityDescriptor ID="TestAgency3" entityID="https://testagency.dia.govt.nz/igovtTargetAgency2/EntityID3" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+ xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:query="urn:oasis:names:tc:SAML:metadata:ext:query" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
+ xmlns:xenc="http://www.w3.org/2001/04/xmlenc#">
+ <md:SPSSODescriptor AuthnRequestsSigned="true" WantAssertionsSigned="true" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+ <md:KeyDescriptor use="signing">
+ <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+ <ds:X509Data>
+ <ds:X509Certificate>MIIDpTCCAo0CBHv6yrgwDQYJKoZIhvcNAQEFBQAwgZYxCzAJBgNVBAYTAk5aMRMw
+
+[full X509 data snipped]
+
+ea4lNDT9WeQaD3JS1LeoUZgQDl82h62FRg==</ds:X509Certificate>
+ </ds:X509Data>
+ </ds:KeyInfo>
+ </md:KeyDescriptor>
+<md:KeyDescriptor use="encryption">
+ <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+ <ds:X509Data>
+ <ds:X509Certificate>MIIDpTCCAo0CBHv6yrgwDQYJKoZIhvcNAQEFBQAwgZYxCzAJBgNVBAYTAk5aMRMw
+
+[full X509 data snipped]
+
+ea4lNDT9WeQaD3JS1LeoUZgQDl82h62FRg==</ds:X509Certificate>
+ </ds:X509Data>
+ </ds:KeyInfo>
+ </md:KeyDescriptor> 
+ <md:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://131.203.137.139/FederationManager/FM/SAMLAssertionConsumer" index="0" isDefault="true">
+ </md:AssertionConsumerService>
+ </md:SPSSODescriptor>
+<md:Organization>
+ <md:OrganizationName xml:lang="en-us">DIA Test Agency</md:OrganizationName>
+ <md:OrganizationDisplayName xml:lang="en-us">DIA Test Agency</md:OrganizationDisplayName>
+ <md:OrganizationURL xml:lang="en-us">http://dia.govt.nz</md:OrganizationURL>
+ </md:Organization>
+ <md:ContactPerson contactType="technical">
+ <md:Company>DIA</md:Company>
+ <md:GivenName>A</md:GivenName>
+ <md:SurName>Fook</md:SurName>
+ </md:ContactPerson>
+</md:EntityDescriptor>
